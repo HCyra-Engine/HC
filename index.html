@@ -1,1 +1,435 @@
-<!DOCTYPE html> <html lang="id"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta property="og:title" content="Hcyra Engine"> <meta property="og:description" content="Powerful & Advanced"> <meta property="og:image" content="https://i.imgur.com/gkR32jl.png"> <title>HCyra Engine | Powerful & Advanced</title> <link rel="icon" href="https://i.imgur.com/gkR32jl.png" type="image/png"> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"> <style> :root { --primary: #007AFF; --accent: #5856D6; --dark: #000000; --glass-bg: rgba(255, 255, 255, 0.4); --glass-border: rgba(255, 255, 255, 0.6); --text-main: #1d1d1f; --text-sub: #86868b; --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.1); } body { margin: 0; font-family: "Poppins", sans-serif; background: #fbfbfd; color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; } #loader-wrapper { position: fixed; inset: 0; z-index: 9999; pointer-events: none; } .loader-layer { position: fixed; inset: 0; height: 100%; width: 100%; transition: transform 0.9s cubic-bezier(0.8, 0, 0.2, 1); will-change: transform; } .layer-3 { background: #1c1c1e; z-index: 10001; } .layer-2 { background: var(--primary); z-index: 10002; } .layer-1 { background: #ffffff; z-index: 10003; display: flex; flex-direction: column; justify-content: center; align-items: center; } #loader-wrapper.loaded .layer-1 { transform: translateX(100%); } #loader-wrapper.loaded .layer-2 { transform: translateX(100%); transition-delay: 0.25s; } #loader-wrapper.loaded .layer-3 { transform: translateX(100%); transition-delay: 0.5s; } .loader-content { opacity: 1; transition: opacity 0.3s; text-align: center; } #loader-wrapper.loaded .loader-content { opacity: 0; } .loading-title { font-size: 1.7rem; font-weight: 800; letter-spacing: -1px; background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; } .percent-txt { font-size: 1.0rem; font-weight: 600; color: #888; } .glass-panel { background: var(--glass-bg); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border: 1px solid var(--glass-border); box-shadow: var(--shadow-glass); position: relative; overflow: hidden; } .glass-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%; background: linear-gradient(125deg, rgba(255,255,255,0.542) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0) 100%); pointer-events: none; z-index: 1; } .mesh-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; background-color: #f2f2f7; } .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6; animation: floatOrb 10s ease-in-out infinite alternate; } .orb-1 { width: 400px; height: 400px; background: #a0c4ff; top: -10%; left: -10%; } .orb-2 { width: 350px; height: 350px; background: #ffc4d6; bottom: -10%; right: -5%; } @keyframes floatOrb { to { transform: translate(30px, -30px); } } .navbar { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); width: 770px; max-width: 87%; height: 65px; border-radius: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; z-index: 1000; transition: 0.3s; } .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main); z-index: 2; } .logo-box { width: 38px; height: 38px; border-radius: 10px; background: url("https://i.imgur.com/gkR32jl.png") center/cover; } .brand-txt { font-weight: 700; font-size: 1.1rem; } .pill { padding: 8px 16px; background: rgba(0, 0, 0, 0.05); border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: var(--primary); z-index: 2; cursor: pointer; transition: 0.2s; } .pill:hover { background: rgba(0, 122, 255, 0.1); transform: scale(1.05); } .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); z-index: 5000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; } .modal-overlay.active { opacity: 1; visibility: visible; } .modal-box { width: 75%; max-width: 400px; border-radius: 24px; padding: 30px; transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .modal-overlay.active .modal-box { transform: scale(1); } .modal-header { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; } .modal-list { list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 0.9rem; color: #555; } .modal-list li { margin-bottom: 8px; display: flex; gap: 10px; } .modal-list li::before { content: '•'; color: var(--primary); font-weight: bold; } .close-btn { width: 100%; padding: 12px; border: none; background: var(--text-main); color: white; border-radius: 14px; font-weight: 600; cursor: pointer; z-index: 5; position: relative; } .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 60px; } .hero-main { opacity: 0; animation: fadeInScale 0.8s forwards 0.6s; z-index: 2; } .hero-tag { font-size: 0.9rem; font-weight: 600; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; } .hero-title { font-size: 4rem; font-weight: 800; margin: 10px 0; letter-spacing: -2px; line-height: 1.1; background: radial-gradient(circle at center, #111, #444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .hero-sub { font-size: 1rem; color: var(--text-sub); margin: 20px auto 40px; max-width: 550px; line-height: 1.6; } .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; width: 100%; max-width: 1000px; } .stat-box { border-radius: 28px; padding: 30px 20px; text-align: center; opacity: 0; animation: slideUpFade 0.8s forwards; } .stat-box:nth-child(1) { animation-delay: 0.8s; } .stat-box:nth-child(2) { animation-delay: 0.9s; } .stat-box:nth-child(3) { animation-delay: 1.0s; } .stat-box:nth-child(4) { animation-delay: 1.1s; } .stat-num { font-size: 2.5rem; font-weight: 700; margin-bottom: 5px; z-index: 2; position: relative; } .stat-desc { font-size: 0.9rem; font-weight: 500; color: var(--text-sub); z-index: 2; position: relative; } .list-wrapper { width: 100%; max-width: 800px; margin: 60px auto 80px; padding: 0 24px; box-sizing: border-box; opacity: 0; animation: slideUpFade 0.8s forwards 1.2s; } .section-header { font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; padding-left: 10px; } .glass-list { border-radius: 24px; padding: 8px; } .list-row { display: flex; align-items: center; padding: 15px 20px; border-radius: 18px; transition: 0.2s; text-decoration: none; position: relative; z-index: 2; } .list-row:hover { background: rgba(255, 255, 255, 0.3); } .row-icon { width: 55px; height: 55px; border-radius: 14px; background: url("https://i.imgur.com/PrVxbB7.png") center/cover; margin-right: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); } .row-info { flex: 1; } .row-title { font-size: 1.05rem; font-weight: 600; color: var(--text-main); } .row-sub { font-size: 0.85rem; color: var(--text-sub); } .action-btn { background: var(--text-main); color: white; padding: 10px 24px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; transition: 0.3s; } .action-btn:hover { background: var(--primary); box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4); } .footer-pro { border-top: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.3); padding: 60px 20px 40px; margin-top: 50px; } .footer-content { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 30px; } .footer-left h3 { margin: 0 0 10px; font-size: 1.2rem; font-weight: 700; } .footer-left p { margin: 0; color: var(--text-sub); font-size: 0.85rem; max-width: 300px; line-height: 1.5; } .footer-bottom { max-width: 900px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); text-align: center; font-size: 0.75rem; color: #999; } @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } } @keyframes slideUpFade { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } } @media (max-width: 768px) { .hero-title { font-size: 2.8rem; } .stats-grid { grid-template-columns: 1fr 1fr; gap: 15px; } .navbar { width: 90%; top: 15px; padding: 0 15px; } .list-row { flex-direction: column; text-align: center; padding: 25px; } .row-icon { margin: 0 0 15px 0; } .action-btn { width: 100%; margin-top: 15px; display: block; box-sizing: border-box; } .footer-content { flex-direction: column; text-align: center; align-items: center; } .footer-links { gap: 30px; } } </style> </head> <body> <div id="loader-wrapper"> <div class="loader-layer layer-3"></div> <div class="loader-layer layer-2"></div> <div class="loader-layer layer-1"> <div class="loader-content"> <div class="loading-title">HCyra Engine</div> <div class="percent-txt"style="margin-top:-14px;" id="percent">0%</div> </div> </div> </div> <div class="modal-overlay" id="updateModal"> <div class="modal-box glass-panel"> <div class="modal-header">Alpha v0.2 Update</div> <ul class="modal-list"> <li>New Glossy Interface Design</li> <li>Improved Application Logic</li> <li>Fixed Layout in Application</li> <li>Performance Optimization</li> </ul> <button class="close-btn" onclick="toggleModal()">Got it</button> </div> </div> <div class="mesh-bg"> <div class="orb orb-1"></div> <div class="orb orb-2"></div> </div> <div class="navbar glass-panel"> <a href="#" class="brand"> <div class="logo-box"></div> <div class="brand-txt">HCyra Engine</div> </a> <div class="pill" onclick="toggleModal()">Alpha v0.2</div> </div> <div class="hero"> <div class="hero-main"> <span class="hero-tag">Next Generation</span> <h1 class="hero-title">Powerful<br>Advanced</h1> <p class="hero-sub">HCyra Engine brings Advanced technology and Powerful design to elevate your websites and applications with cleaner, faster, and more efficient performance. </p> </div> <div class="stats-grid"> <div class="stat-box glass-panel"> <div class="stat-num">2</div> <div class="stat-desc">Web Created</div> </div> <div class="stat-box glass-panel"> <div class="stat-num">1</div> <div class="stat-desc">Apps Created</div> </div> <div class="stat-box glass-panel"> <div class="stat-num">8</div> <div class="stat-desc">Small Projects</div> </div> <div class="stat-box glass-panel"> <div class="stat-num">3</div> <div class="stat-desc">Big Projects</div> </div> </div> </div> <div class="list-wrapper"> <div class="section-header">Recent Projects</div> <div class="glass-panel glass-list"> <div class="list-row"> <div class="row-icon"></div> <div class="row-info"> <div class="row-title">Seblak Mamah Agam</div> <div class="row-sub">E-Commerce & Culinary</div> </div> <a href="https://seblakmamahagam-pixel.github.io/v0.1/" class="action-btn">Visit Website</a> </div> </div> </div> <footer class="footer-pro"> <div class="footer-content"> <div class="footer-left"> <h3>HCyra Engine</h3> <p>The engine in still Alpha version and for developer use only.</p> </div> </div> <div class="footer-bottom"> © 2026 HCyra Engine All rights reserved.<br>Developed by AgodZz. </div> </footer> <script> const loaderWrapper = document.getElementById('loader-wrapper'); const percentText = document.getElementById('percent'); let percent = 0; const interval = setInterval(() => { percent += Math.floor(Math.random() * 15) + 5; if(percent >= 100) { percent = 100; percentText.innerText = "100%"; clearInterval(interval); setTimeout(() => { loaderWrapper.classList.add('loaded'); }, 300); } else { percentText.innerText = percent + "%"; } }, 80); function toggleModal() { const modal = document.getElementById('updateModal'); modal.classList.toggle('active'); } document.getElementById('updateModal').addEventListener('click', function(e) { if (e.target === this) { toggleModal(); } }); </script> </body> </html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> <meta name="theme-color" content="#111a36"> <title>Pancasila Drop Ball — Kelompok 6</title> <style>
+:root {
+--background: #121a39;
+--panel: #192344;
+--panel-light: #25345d;
+--gold: #ffd15a;
+--cyan: #65dce8;
+--text: #f6f7ff;
+--muted: #b2bddc;
+--border: rgba(255, 255, 255, 0.13); }
+* { box-sizing: border-box; } body {
+min-height: 100vh;
+margin: 0;
+color: var(--text);
+font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:
+radial-gradient(ellipse at 50% -15%, #334b8d 0, transparent 55%), var(--background);
+}
+button { font: inherit; } button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; } .app {
+width: min(1040px, 100%); margin: 0 auto;
+padding: 22px 18px 30px; }
+.top-panel {
+display: grid;
+grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+gap: 18px;
+padding: 22px 24px;
+margin-bottom: 22px;
+border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px;
+background: linear-gradient(112deg, #1c294e 0%, #293a68 56%, #1b2547 100%); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18), inset 0 1px rgba(255, 255, 255, 0.08); }
+.brand {
+display: flex;
+align-items: center;
+gap: 16px;
+min-width: 0;
+}
+.brand-mark {
+display: grid;
+place-items: center;
+flex: 0 0 auto;
+width: 66px;
+height: 66px;
+border-radius: 19px;
+color: #4b2c10;
+font-size: 34px;
+background: linear-gradient(145deg, #ffe99a, #ffb73d); box-shadow: 0 5px 0 #9a6125; }
+.brand-kicker {
+margin-bottom: 5px;
+color: var(--cyan);
+font-size: 11px;
+font-weight: 900;
+letter-spacing: 2.8px;
+line-height: 1.4;
+}
+h1 {
+margin: 0;
+font-size: clamp(25px, 4.3vw, 43px); line-height: 1.04;
+letter-spacing: -1.6px;
+font-weight: 850;
+}
+h1 span { color: var(--gold); } .header-meta {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 12px 15px;
+border: 1px solid rgba(255, 255, 255, 0.17); border-radius: 13px;
+color: #e4eaff;
+background: rgba(9, 16, 38, 0.22); font-size: 12px;
+white-space: nowrap;
+}
+.meta-divider {
+width: 4px;
+height: 4px;
+border-radius: 50%;
+background: #91a2d5;
+}
+.header-meta strong { color: var(--gold); } .intro {
+margin: 0 auto 20px;
+text-align: center;
+}
+.intro h2 {
+margin: 0 0 7px;
+font-size: clamp(24px, 4.2vw, 38px); line-height: 1.2;
+letter-spacing: -1.1px;
+}
+.intro h2 span { color: var(--gold); } .intro p {
+max-width: 690px;
+margin: 0 auto;
+color: var(--muted);
+font-size: clamp(12px, 1.6vw, 15px); line-height: 1.6;
+}
+.machine {
+padding: 8px;
+border-radius: 21px;
+background: linear-gradient(135deg, #ffe9a0, #9baedb 36%, #56689d 70%, #f4c75d); box-shadow: 0 7px 0 #080c1b, 0 18px 35px rgba(0, 0, 0, 0.32); }
+.board {
+position: relative;
+overflow: hidden;
+padding: 15px 13px 14px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 15px;
+background: linear-gradient(155deg, #283765 0%, #1b2448 55%, #111831 100%); }
+.board-head {
+display: flex;
+align-items: center;
+justify-content: space-between; gap: 10px;
+margin-bottom: 13px;
+}
+.board-label {
+color: #d2dcf8;
+font-size: 10px;
+font-weight: 900;
+letter-spacing: 1.5px;
+text-transform: uppercase; }
+.target-pill {
+padding: 5px 9px;
+border-radius: 999px;
+color: #39280e;
+background: var(--gold); font-size: 10px;
+font-weight: 900;
+white-space: nowrap;
+}
+.holes {
+position: relative;
+z-index: 1;
+display: grid;
+grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px 8px;
+width: min(650px, 100%); margin: 0 auto;
+}
+.hole-card {
+min-width: 0;
+padding: 7px 2px 6px;
+text-align: center;
+border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 11px;
+background: rgba(255, 255, 255, 0.025); transition: background 180ms ease, border-color 180ms ease; }
+.hole-card.active {
+border-color: var(--gold); background: rgba(255, 209, 90, 0.12); box-shadow: 0 0 14px rgba(255, 209, 90, 0.12); }
+.hole-card.landed {
+border-color: var(--cyan); background: rgba(101, 220, 232, 0.09); }
+.hole-number {
+margin-bottom: 5px;
+color: #cbd5f4;
+font-size: 9px;
+font-weight: 850;
+letter-spacing: 0.45px;
+}
+.hole {
+position: relative;
+display: grid;
+place-items: center;
+width: clamp(36px, 7.2vw, 55px); max-width: 100%;
+aspect-ratio: 1;
+margin: 0 auto;
+border: 3px solid #9caddd; border-radius: 50%;
+background: radial-gradient(circle at 45% 35%, #26345d 0, #0b1128 68%); box-shadow: inset 0 5px 8px #000c, inset 0 -1px 2px #b7c4ff38, 0 3px 0 #090e21; }
+.hole::after {
+position: absolute;
+inset: 4px;
+border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 50%;
+content: "";
+}
+.hole-card:nth-child(4n + 1) .hole { border-color: #ffd06a; } .hole-card:nth-child(4n + 2) .hole { border-color: #65dce8; } .hole-card:nth-child(4n + 3) .hole { border-color: #ff8eae; } .hole-card:nth-child(4n) .hole { border-color: #b7a3ff; } .hole-card.landed .hole { box-shadow: inset 0 5px 8px #000c, 0 0 0 3px rgba(101, 220, 232, 0.12); }
+.hole-mark {
+z-index: 1;
+color: #aab8e4;
+font-size: 11px;
+font-weight: 950;
+}
+.hole-caption {
+margin-top: 4px;
+color: #aab6dd;
+font-size: 8px;
+font-weight: 800;
+}
+.ball {
+position: absolute;
+top: 0;
+left: 0;
+z-index: 5;
+width: 24px;
+height: 24px;
+border-radius: 50%;
+opacity: 0;
+pointer-events: none;
+background: radial-gradient(circle at 28% 23%, #fff 0 4%, #fff8c2 8%, #ffdf60 24%, #ff9a2e 55%, #e45319 78%, #81250f 100%); box-shadow: inset -3px -4px 6px #85281aaa, inset 3px 3px 5px #fff9, 0 5px 9px #0009, 0 0 13px #ffc64c90; }
+.ball::after {
+position: absolute;
+top: 4px;
+left: 5px;
+width: 7px;
+height: 4px;
+border-radius: 50%;
+background: #fff9;
+content: "";
+transform: rotate(-35deg); }
+.board-foot {
+margin-top: 12px;
+color: #aab6dd;
+font-size: 10px;
+text-align: center;
+}
+.controls {
+display: flex;
+justify-content: center; flex-wrap: wrap;
+gap: 10px;
+margin: 17px 0 10px;
+}
+button { cursor: pointer; transition: filter 150ms ease, transform 150ms ease; } button:hover { filter: brightness(1.06); } button:active { transform: translateY(1px); } button:disabled { opacity: 0.65; cursor: wait; } .primary {
+padding: 11px 19px;
+border: 0;
+border-radius: 11px;
+color: #38230e;
+background: linear-gradient(#ffe68b, #ffb82e); box-shadow: 0 4px 0 #a76a1e; font-size: 12px;
+font-weight: 950;
+}
+.secondary {
+padding: 10px 15px;
+border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 11px;
+color: #e5eaff;
+background: linear-gradient(#354174, #242c55); box-shadow: 0 3px 0 #0a1025; font-size: 11px;
+font-weight: 800;
+}
+.hint {
+margin: 0 auto 15px;
+color: #9da9d3;
+font-size: 10px;
+line-height: 1.5;
+text-align: center;
+}
+.stats {
+display: grid;
+grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+}
+.stat {
+padding: 10px 5px;
+border: 1px solid var(--border); border-radius: 12px;
+background: rgba(255, 255, 255, 0.04); text-align: center;
+}
+.stat-label {
+color: #9eabd5;
+font-size: 8px;
+font-weight: 900;
+letter-spacing: 1px;
+text-transform: uppercase; }
+.stat-value { margin-top: 3px; font-size: 18px; font-weight: 950; } .gold { color: var(--gold); } /* Question popup: keep it in the layout while hidden so transitions work. */ .question-backdrop {
+position: fixed;
+inset: 0;
+z-index: 20;
+display: flex;
+align-items: center;
+justify-content: center; padding: 16px;
+background: rgba(5, 9, 24, 0.78); backdrop-filter: blur(5px); opacity: 0;
+visibility: hidden;
+pointer-events: none;
+transition: opacity 240ms ease, visibility 240ms ease; }
+.question-backdrop.show { opacity: 1;
+visibility: visible;
+pointer-events: auto;
+}
+.question-modal {
+width: min(420px, 100%); padding: 20px;
+border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 18px;
+background: linear-gradient(150deg, #293761, #171f3e 72%); box-shadow: 0 24px 65px rgba(0, 0, 0, 0.45); opacity: 0;
+transform: translateY(22px) scale(0.94); transition: opacity 250ms ease, transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.question-backdrop.show .question-modal { opacity: 1;
+transform: translateY(0) scale(1); }
+.modal-head {
+display: flex;
+align-items: center;
+justify-content: space-between; gap: 10px;
+margin-bottom: 13px;
+}
+.modal-head h3 { margin: 0; font-size: 17px; } .close {
+display: grid;
+place-items: center;
+width: 31px;
+height: 31px;
+border: 0;
+border-radius: 9px;
+color: #fff;
+background: rgba(255, 255, 255, 0.1); font-size: 20px;
+}
+.question-tag {
+display: inline-block;
+padding: 5px 9px;
+border-radius: 999px;
+color: #39280e;
+background: var(--gold); font-size: 10px;
+font-weight: 950;
+}
+.question-text {
+display: grid;
+place-items: center;
+min-height: 100px;
+margin: 13px 0;
+padding: 17px;
+border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+color: #e3e9ff;
+background: #10172f;
+font-size: 15px;
+line-height: 1.55;
+text-align: center;
+}
+.modal-actions { display: flex; justify-content: flex-end; } /* Intro tutorial popup */ .tutorial-backdrop {
+position: fixed;
+inset: 0;
+z-index: 30;
+display: flex;
+align-items: center;
+justify-content: center; padding: 16px;
+background: rgba(5, 9, 24, 0.88); backdrop-filter: blur(7px); opacity: 1;
+visibility: visible;
+transition: opacity 250ms ease, visibility 250ms ease; }
+.tutorial-backdrop.hidden { opacity: 0;
+visibility: hidden;
+pointer-events: none;
+}
+.tutorial-modal {
+width: min(430px, 100%); padding: 22px;
+border: 1px solid rgba(255, 255, 255, 0.17); border-radius: 19px;
+background: linear-gradient(145deg, #26345d, #171f3e); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.4); transform: translateY(0) scale(1); transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tutorial-backdrop.hidden .tutorial-modal { transform: translateY(12px) scale(0.97); } .tutorial-heading { margin-bottom: 17px; text-align: center; } .tutorial-mark {
+display: grid;
+place-items: center;
+width: 45px;
+height: 45px;
+margin: 0 auto 11px;
+border-radius: 14px;
+color: #4b2c10;
+background: linear-gradient(145deg, #ffe99a, #ffb73d); box-shadow: 0 4px 0 #9a6125; font-size: 24px;
+}
+.tutorial-kicker {
+margin-bottom: 4px;
+color: var(--cyan);
+font-size: 9px;
+font-weight: 900;
+letter-spacing: 2px;
+}
+.tutorial-modal h2 { margin: 0 0 5px; font-size: 23px; } .tutorial-sub { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; } .tutorial-list { display: grid; gap: 8px; margin-bottom: 14px; } .tutorial-step {
+display: flex;
+align-items: flex-start; gap: 10px;
+padding: 10px;
+border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 10px;
+color: #e0e7ff;
+background: rgba(255, 255, 255, 0.035); font-size: 12px;
+line-height: 1.45;
+}
+.step-number {
+display: grid;
+place-items: center;
+flex: 0 0 auto;
+width: 22px;
+height: 22px;
+border-radius: 7px;
+color: #39280e;
+background: var(--gold); font-size: 11px;
+font-weight: 950;
+}
+.creator-credit {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 3px;
+margin-bottom: 14px;
+padding: 12px 10px;
+border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 11px;
+background: rgba(8, 14, 32, 0.45); }
+.creator-label { color: #9eacd7; font-size: 9px; font-weight: 900; letter-spacing: 1.8px; } .creator-credit strong { color: var(--gold); font-size: 15px; letter-spacing: 1px; } .creator-subtitle { color: #aeb9dc; font-size: 10px; text-align: center;} .start-button { width: 100%; padding: 12px 16px; } .toast {
+position: fixed;
+z-index: 40;
+bottom: 16px;
+left: 50%;
+max-width: 90%;
+padding: 10px 14px;
+border-radius: 10px;
+color: #17203e;
+background: #fff;
+box-shadow: 0 5px 20px #0006; font-size: 11px;
+font-weight: 800;
+text-align: center;
+opacity: 0;
+pointer-events: none;
+transform: translate(-50%, 10px); transition: opacity 180ms ease, transform 180ms ease; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); } @media (max-width: 620px) { .app { padding: 14px 10px 22px; } .top-panel { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 15px; margin-bottom: 18px; border-radius: 16px; } .brand { gap: 11px; }
+.brand-mark { width: 48px; height: 48px; border-radius: 14px; font-size: 25px; box-shadow: 0 4px 0 #9a6125; } .brand-kicker { font-size: 8px; letter-spacing: 1.4px; margin-bottom: 4px; } h1 { font-size: clamp(21px, 6vw, 29px); letter-spacing: -0.8px; } .header-meta { justify-content: center; gap: 9px; padding: 8px 10px; font-size: 10px; } .intro { margin-bottom: 15px; } .intro h2 { font-size: clamp(21px, 5.6vw, 29px); letter-spacing: -0.6px; } .intro p { font-size: 11px; } .machine { padding: 6px; border-radius: 17px; } .board { padding: 11px 6px 12px; border-radius: 12px; } .holes { gap: 7px 4px; } .hole-card { padding: 5px 1px 4px; border-radius: 8px; } .hole { width: clamp(31px, 8.5vw, 43px); border-width: 2px; } .hole-mark { font-size: 10px; } .hole-number { font-size: 8px; } .hole-caption { font-size: 7px; } .board-label, .target-pill { font-size: 9px; } .stat { padding: 9px 3px; } .stat-label { font-size: 7px; letter-spacing: 0.6px; } .stat-value { font-size: 16px; } }
+@media (max-width: 360px) { .header-meta { font-size: 9px; } .brand-kicker { font-size: 7px; letter-spacing: 1px; } h1 { font-size: 19px; }
+.hole { width: 29px; }
+.hole-number { font-size: 7px; } .hole-caption { font-size: 6px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top-panel"> <div class="brand">
+<div class="brand-mark" aria-hidden="true">⚽</div> <div>
+<div class="brand-kicker">Board Game <span aria-hidden="true">•</span> Kelompok 6</div> <h1>PANCASILA <span>DROP BALL</span></h1> </div>
+</div>
+</header>
+<section class="intro">
+<h2>Jatuhkan bola, <span>lalu diskusikan!</span></h2> <p>Bola jatuh dari atas dan masuk ke salah satu lubang secara acak.</p> </section>
+<section class="machine" aria-label="Papan permainan"> <div class="board" id="board"> <div class="board-head"> <div class="board-label">Papan drop ball</div> <div class="target-pill">20 LUBANG</div> </div>
+<div class="holes" id="holes"></div> <div class="ball" id="ball" aria-hidden="true"></div> <div class="board-foot">Tekan “Jatuhkan Bola” untuk memulai permainan.</div> </div>
+</section>
+<div class="controls">
+<button class="primary" id="dropBtn" type="button">↓ JATUHKAN BOLA</button> <button class="secondary" id="resetBtn" type="button">↻ Reset</button> </div>
+<p class="hint">Setiap lubang berisi satu soal yang berbeda.</p> <section class="stats" aria-label="Statistik permainan"> <div class="stat">
+<div class="stat-label">Total lubang</div> <div class="stat-value">20</div> </div>
+<div class="stat">
+<div class="stat-label">Bola dijatuhkan</div> <div class="stat-value gold" id="dropCount">0</div> </div>
+<div class="stat">
+<div class="stat-label">Lubang terakhir</div> <div class="stat-value" id="lastTarget">—</div> </div>
+</section>
+</main>
+<div class="tutorial-backdrop" id="tutorialBackdrop" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle"> <section class="tutorial-modal"> <div class="tutorial-heading"> <div class="tutorial-mark" aria-hidden="true">⚽</div> <h2 id="tutorialTitle">Cara Bermain</h2> <p class="tutorial-sub">Baca panduan singkat sebelum memulai.</p> </div>
+<div class="tutorial-list"> <div class="tutorial-step"><span class="step-number">1</span><span>Tekan tombol <b>Jatuhkan Bola</b>.</span></div> <div class="tutorial-step"><span class="step-number">2</span><span>Bola akan masuk ke salah satu dari 20 lubang secara acak.</span></div> <div class="tutorial-step"><span class="step-number">3</span><span>Baca soal yang muncul, lalu diskusikan jawabannya bersama kelompok.</span></div> <div class="tutorial-step"><span class="step-number">4</span><span>Setelah berdiskusi dengan kelompok, jawab soal tersebut oleh salah satu perwakilan dari kelompok kalian.</span></div> </div>
+<div class="creator-credit"> <span class="creator-label">DIBUAT OLEH</span> <strong>KELOMPOK 6</strong> <span class="creator-subtitle">Ahmad Godjali || 25416287205037<br>Divia Fairus Shafa Salsabila || 25416287205001<br>Maulana Mahesa Jenar || 25416287205023</span> </div>
+<button class="primary start-button" id="startBtn" type="button">MULAI PERMAINAN</button> </section>
+</div>
+<div class="question-backdrop" id="questionBackdrop" role="dialog" aria-modal="true" aria-labelledby="questionTitle" aria-hidden="true"> <section class="question-modal"> <div class="modal-head"> <h3 id="questionTitle">Soal Pancasila Drop Ball</h3> <button class="close" id="closeQuestionBtn" type="button" aria-label="Tutup soal">×</button> </div>
+<span class="question-tag" id="questionTag">LUBANG 01</span> <div class="question-text" id="questionText"></div> <div class="modal-actions"> <button class="secondary" id="skipQuestionBtn" type="button">Selesai Menjawab</button> </div>
+</section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div> <script>
+(() => {
+'use strict';
+const holesElement = document.getElementById('holes'); const boardElement = document.getElementById('board'); const ballElement = document.getElementById('ball'); const dropButton = document.getElementById('dropBtn'); const resetButton = document.getElementById('resetBtn'); const tutorialBackdrop = document.getElementById('tutorialBackdrop'); const questionBackdrop = document.getElementById('questionBackdrop'); const questionTag = document.getElementById('questionTag'); const questionText = document.getElementById('questionText'); const dropCountElement = document.getElementById('dropCount'); const lastTargetElement = document.getElementById('lastTarget'); const toastElement = document.getElementById('toast'); const questions = {
+1: 'Apa yang dimaksud dengan Pancasila sebagai dasar negara?', 2: 'Mengapa nilai-nilai Pancasila harus diterapkan dalam kehidupan sehari-hari?', 3: 'Jelaskan hubungan Pancasila dengan UUD Negara Republik Indonesia Tahun 1945!', 4: 'Apa makna semboyan Bhinneka Tunggal Ika?', 5: 'Bagaimana cara menerapkan sila ketiga Pancasila di lingkungan sekolah?', 6: 'Apa yang dimaksud dengan hak dan kewajiban warga negara?', 7: 'Mengapa pelaksanaan hak dan kewajiban harus seimbang?', 8: 'Sebutkan tiga contoh hak warga negara Indonesia!', 9: 'Sebutkan tiga contoh kewajiban warga negara Indonesia!', 10: 'Apa saja tantangan dalam pemenuhan hak dan kewajiban warga negara?', 11: 'Apa yang dimaksud dengan kemerdekaan berpendapat?', 12: 'Mengapa kebebasan berpendapat harus dilakukan secara bertanggung jawab?', 13: 'Sebutkan tiga bentuk penyampaian pendapat di muka umum!', 14: 'Apa yang dimaksud dengan keterbukaan informasi publik?', 15: 'Apa yang dimaksud dengan tradisi, kearifan lokal, dan budaya?', 16: 'Sebutkan tiga contoh budaya Indonesia yang harus dilestarikan!', 17: 'Mengapa tradisi dan budaya Indonesia perlu dilestarikan di era globalisasi?', 18: 'Apa yang dimaksud dengan Negara Kesatuan Republik Indonesia (NKRI)?', 19: 'Sebutkan tiga upaya untuk mempertahankan persatuan dan kesatuan NKRI!', 20: 'Bagaimana peran pelajar dalam menjaga keutuhan NKRI?'
+};
+let isAnimating = false; let dropCount = 0;
+let toastTimeout = null; let ballAnimation = null; 
+/** @param {string} message */ function showToast(message) { toastElement.textContent = message; toastElement.classList.add('show'); window.clearTimeout(toastTimeout); toastTimeout = window.setTimeout(() => { toastElement.classList.remove('show'); }, 2100);
+}
+/** @param {number} index */ function openQuestion(index) { questionTag.textContent = `LUBANG ${String(index).padStart(2, '0')}`; questionText.textContent = questions[index] || 'Soal belum tersedia.'; questionBackdrop.setAttribute('aria-hidden', 'false'); questionBackdrop.classList.add('show'); document.getElementById('closeQuestionBtn').focus({ preventScroll: true }); }
+function closeQuestion() { questionBackdrop.classList.remove('show'); questionBackdrop.setAttribute('aria-hidden', 'true'); }
+function createHoles() { const fragment = document.createDocumentFragment(); for (let index = 1; index <= 20; index += 1) { const card = document.createElement('div'); card.className = 'hole-card'; card.dataset.hole = String(index); card.innerHTML = `
