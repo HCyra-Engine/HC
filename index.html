@@ -433,3 +433,46 @@ let toastTimeout = null; let ballAnimation = null;
 /** @param {number} index */ function openQuestion(index) { questionTag.textContent = `LUBANG ${String(index).padStart(2, '0')}`; questionText.textContent = questions[index] || 'Soal belum tersedia.'; questionBackdrop.setAttribute('aria-hidden', 'false'); questionBackdrop.classList.add('show'); document.getElementById('closeQuestionBtn').focus({ preventScroll: true }); }
 function closeQuestion() { questionBackdrop.classList.remove('show'); questionBackdrop.setAttribute('aria-hidden', 'true'); }
 function createHoles() { const fragment = document.createDocumentFragment(); for (let index = 1; index <= 20; index += 1) { const card = document.createElement('div'); card.className = 'hole-card'; card.dataset.hole = String(index); card.innerHTML = `
+<div class="hole-number">LUBANG ${String(index).padStart(2, '0')}</div> <div class="hole"><span class="hole-mark">${String(index).padStart(2, '0')}</span></div> <div class="hole-caption">ㅤ</div> `;
+fragment.appendChild(card); }
+holesElement.appendChild(fragment); }
+/** @param {Element} targetCard */ function animateBallToTarget(targetCard) { const holeElement = targetCard.querySelector('.hole'); const boardRect = boardElement.getBoundingClientRect(); const holeRect = holeElement.getBoundingClientRect(); const ballSize = ballElement.offsetWidth; const startX = boardRect.width / 2 - ballSize / 2; const startY = -ballSize - 2; const endX = holeRect.left - boardRect.left + holeRect.width / 2 - ballSize / 2; const endY = holeRect.top - boardRect.top + holeRect.height / 2 - ballSize / 2; const middleX = startX + (endX - startX) * 0.45; const middleY = Math.max(35, endY * 0.42); ballElement.style.opacity = '1'; targetCard.classList.add('active'); return ballElement.animate([ { transform: `translate(${startX}px, ${startY}px) scale(.72)`, opacity: 0, offset: 0 }, { transform: `translate(${startX}px, ${Math.max(15, startY + 40)}px) scale(1)`, opacity: 1, offset: 0.14 }, { transform: `translate(${middleX}px, ${middleY}px) scale(1.04)`, opacity: 1, offset: 0.48 }, { transform: `translate(${endX}px, ${endY}px) scale(.82)`, opacity: 1, offset: 0.84 }, { transform: `translate(${endX}px, ${endY + 8}px) scale(.18)`, opacity: 0.12, offset: 1 } ], {
+duration: 1150,
+easing: 'cubic-bezier(.38,.02,.65,.98)', fill: 'forwards'
+});
+}
+/**
+* @param {Element} targetCard * @param {number} targetIndex */
+function finishDrop(targetCard, targetIndex) { ballElement.style.opacity = '0'; ballElement.style.transform = ''; targetCard.classList.remove('active'); holesElement.querySelectorAll('.hole-card').forEach(card => { card.classList.remove('landed'); });
+targetCard.classList.add('landed'); dropCount += 1;
+dropCountElement.textContent = String(dropCount); lastTargetElement.textContent = String(targetIndex).padStart(2, '0'); isAnimating = false;
+dropButton.disabled = false; dropButton.textContent = '↓ JATUHKAN BOLA'; openQuestion(targetIndex); }
+function dropBall() {
+if (isAnimating) return; isAnimating = true;
+dropButton.disabled = true; dropButton.textContent = 'BOLA MELUNCUR...'; holesElement.querySelectorAll('.hole-card').forEach(card => { card.classList.remove('active'); });
+const targetIndex = Math.floor(Math.random() * 20) + 1; const targetCard = holesElement.querySelector(`[data-hole="${targetIndex}"]`); if (!targetCard) {
+isAnimating = false;
+dropButton.disabled = false; dropButton.textContent = '↓ JATUHKAN BOLA'; showToast('Target tidak ditemukan. Coba lagi.'); return;
+}
+ballAnimation = animateBallToTarget(targetCard); ballAnimation.onfinish = () => { finishDrop(targetCard, targetIndex); ballAnimation = null;
+};
+ballAnimation.oncancel = () => { ballElement.style.opacity = '0'; targetCard.classList.remove('active'); isAnimating = false;
+dropButton.disabled = false; dropButton.textContent = '↓ JATUHKAN BOLA'; ballAnimation = null;
+};
+}
+function resetGame() {
+if (isAnimating) return; dropCount = 0;
+dropCountElement.textContent = '0'; lastTargetElement.textContent = '—'; holesElement.querySelectorAll('.hole-card').forEach(card => { card.classList.remove('active', 'landed'); });
+closeQuestion();
+showToast('Permainan berhasil direset.'); }
+document.getElementById('startBtn').addEventListener('click', () => { tutorialBackdrop.classList.add('hidden'); window.setTimeout(() => { tutorialBackdrop.style.display = 'none'; dropButton.focus({ preventScroll: true }); }, 270);
+});
+dropButton.addEventListener('click', dropBall); resetButton.addEventListener('click', resetGame); document.getElementById('closeQuestionBtn').addEventListener('click', closeQuestion); document.getElementById('skipQuestionBtn').addEventListener('click', closeQuestion); questionBackdrop.addEventListener('click', event => { if (event.target === questionBackdrop) closeQuestion(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeQuestion();
+}
+});
+createHoles();
+})();
+</script>
+</body>
+</html>
